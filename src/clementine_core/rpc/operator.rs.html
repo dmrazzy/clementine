@@ -333,12 +333,12 @@
 <span class="kw">use </span><span class="kw">super</span>::error::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">super</span>::parser::ParserError;
 <span class="kw">use </span><span class="kw">crate</span>::bitvm_client::ClementineBitVMPublicKeys;
-<span class="kw">use </span><span class="kw">crate</span>::builder::transaction::sign::create_and_sign_txs;
+<span class="kw">use </span><span class="kw">crate</span>::builder::transaction::sign::{create_and_sign_txs, TransactionRequestData};
 <span class="kw">use </span><span class="kw">crate</span>::citrea::CitreaClientT;
+<span class="kw">use </span><span class="kw">crate</span>::constants::DEFAULT_CHANNEL_SIZE;
 <span class="kw">use </span><span class="kw">crate</span>::deposit::DepositData;
 <span class="kw">use </span><span class="kw">crate</span>::operator::OperatorServer;
 <span class="kw">use </span><span class="kw">crate</span>::rpc::parser;
-<span class="kw">use </span><span class="kw">crate</span>::rpc::parser::parse_transaction_request;
 <span class="kw">use </span><span class="kw">crate</span>::utils::get_vergen_response;
 <span class="kw">use </span>bitcoin::hashes::Hash;
 <span class="kw">use </span>bitcoin::{BlockHash, OutPoint};
@@ -366,7 +366,7 @@
         _request: Request&lt;Empty&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;<span class="self">Self</span>::GetParamsStream&gt;, Status&gt; {
         <span class="kw">let </span>operator = <span class="self">self</span>.operator.clone();
-        <span class="kw">let </span>(tx, rx) = mpsc::channel(<span class="number">1280</span>);
+        <span class="kw">let </span>(tx, rx) = mpsc::channel(DEFAULT_CHANNEL_SIZE);
         <span class="kw">let </span>out_stream: <span class="self">Self</span>::GetParamsStream = ReceiverStream::new(rx);
 
         <span class="kw">let </span>(<span class="kw-2">mut </span>wpk_receiver, <span class="kw-2">mut </span>signature_receiver) = operator.get_params().<span class="kw">await</span><span class="question-mark">?</span>;
@@ -402,7 +402,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         request: Request&lt;DepositSignSession&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;<span class="self">Self</span>::DepositSignStream&gt;, Status&gt; {
-        <span class="kw">let </span>(tx, rx) = mpsc::channel(<span class="number">1280</span>);
+        <span class="kw">let </span>(tx, rx) = mpsc::channel(DEFAULT_CHANNEL_SIZE);
 
         <span class="kw">let </span>deposit_sign_session = request.into_inner();
         <span class="kw">let </span>deposit_params: DepositParams = deposit_sign_session.try_into()<span class="question-mark">?</span>;
@@ -493,7 +493,7 @@
         request: Request&lt;TransactionRequest&gt;,
     ) -&gt; std::result::Result&lt;tonic::Response&lt;<span class="kw">super</span>::SignedTxsWithType&gt;, tonic::Status&gt; {
         <span class="kw">let </span>tx_req = request.into_inner();
-        <span class="kw">let </span>tx_req_data = parse_transaction_request(tx_req)<span class="question-mark">?</span>;
+        <span class="kw">let </span>tx_req_data: TransactionRequestData = tx_req.try_into()<span class="question-mark">?</span>;
 
         <span class="kw">let </span>raw_txs = <span class="self">self
             </span>.operator
@@ -555,7 +555,7 @@
         request: tonic::Request&lt;<span class="kw">super</span>::TransactionRequest&gt;,
     ) -&gt; std::result::Result&lt;tonic::Response&lt;<span class="kw">super</span>::SignedTxsWithType&gt;, tonic::Status&gt; {
         <span class="kw">let </span>transaction_request = request.into_inner();
-        <span class="kw">let </span>transaction_data = parse_transaction_request(transaction_request)<span class="question-mark">?</span>;
+        <span class="kw">let </span>transaction_data: TransactionRequestData = transaction_request.try_into()<span class="question-mark">?</span>;
         <span class="kw">let </span>raw_txs = create_and_sign_txs(
             <span class="self">self</span>.operator.db.clone(),
             <span class="kw-2">&amp;</span><span class="self">self</span>.operator.signer,
