@@ -1141,10 +1141,6 @@ async fn test_send_rbf() -> Result<(), BridgeError> {
             Some(RbfSigningInfo {
                 vout: 0,
                 tweak_merkle_root: None,
-                #[cfg(test)]
-                annex: None,
-                #[cfg(test)]
-                additional_taproot_output_count: None,
             }),
             &[],
             &[],
@@ -1166,10 +1162,6 @@ async fn test_send_rbf() -> Result<(), BridgeError> {
             Some(RbfSigningInfo {
                 vout: 0,
                 tweak_merkle_root: None,
-                #[cfg(test)]
-                annex: None,
-                #[cfg(test)]
-                additional_taproot_output_count: None,
             }),
             current_tip_height,
         )
@@ -1273,10 +1265,6 @@ async fn test_bg_send_rbf() -> Result<(), BridgeError> {
             Some(RbfSigningInfo {
                 vout: 0,
                 tweak_merkle_root: None,
-                #[cfg(test)]
-                annex: None,
-                #[cfg(test)]
-                additional_taproot_output_count: None,
             }),
             &[],
             &[],
@@ -1332,10 +1320,6 @@ async fn test_send_with_initial_funding_rbf() -> Result<(), BridgeError> {
             Some(RbfSigningInfo {
                 vout: 0,
                 tweak_merkle_root: None,
-                #[cfg(test)]
-                annex: None,
-                #[cfg(test)]
-                additional_taproot_output_count: None,
             }),
             &[],
             &[],
@@ -1357,10 +1341,6 @@ async fn test_send_with_initial_funding_rbf() -> Result<(), BridgeError> {
             Some(RbfSigningInfo {
                 vout: 0,
                 tweak_merkle_root: None,
-                #[cfg(test)]
-                annex: None,
-                #[cfg(test)]
-                additional_taproot_output_count: None,
             }),
             current_tip_height,
         )
@@ -1498,10 +1478,6 @@ async fn test_bump_rbf_after_sent() -> Result<(), BridgeError> {
             Some(RbfSigningInfo {
                 vout: 0,
                 tweak_merkle_root: None,
-                #[cfg(test)]
-                annex: None,
-                #[cfg(test)]
-                additional_taproot_output_count: None,
             }),
             current_tip_height,
         )
@@ -1538,10 +1514,6 @@ async fn test_bump_rbf_after_sent() -> Result<(), BridgeError> {
             Some(RbfSigningInfo {
                 vout: 0,
                 tweak_merkle_root: None,
-                #[cfg(test)]
-                annex: None,
-                #[cfg(test)]
-                additional_taproot_output_count: None,
             }),
             current_tip_height,
         )
